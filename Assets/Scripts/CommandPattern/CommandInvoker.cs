@@ -44,7 +44,7 @@ public class CommandInvoker : MonoBehaviour
 
         else
         {
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKeyDown(KeyCode.Z)) //Check for Undo
             {
                 if (counter > 0)
                 {
@@ -52,7 +52,7 @@ public class CommandInvoker : MonoBehaviour
                     commandHistory[counter].Undo();
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.R))
+            else if (Input.GetKeyDown(KeyCode.R)) //Check for Redo
             {
                 if (counter < commandHistory.Count)
                 {
@@ -61,5 +61,20 @@ public class CommandInvoker : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ExportLog();
+        }
+    }
+
+    static void ExportLog()
+    {
+        List<string> lines = new List<string>();
+        foreach (ICommand c in commandHistory)
+        {
+            lines.Add(c.ToString());
+        }
+        System.IO.File.WriteAllLines(Application.dataPath + "/commandlog.txt", lines);
     }
 }

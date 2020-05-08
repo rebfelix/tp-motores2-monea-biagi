@@ -82,12 +82,12 @@ public class AssetBrushComponentInspector : Editor
     {
         if (useCommandWorkflow)
         {
-            ICommand newCommand = new PlaceObjectCommand(position);
+            ICommand newCommand = new PlaceObjectCommand(position); //METODO EXPERIMENTAL, NO SE USA POR DEFECTO
             CommandInvoker.AddCommand(newCommand);
         }
         else
         {
-            ObjectPlacer.PlaceObject(position);
+            ObjectPlacer.PlaceObject(position); //METODO COMUN PARA COLOCAR OBJETOS USADO POR DEFECTO
         }
     }
 

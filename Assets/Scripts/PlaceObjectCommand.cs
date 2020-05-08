@@ -21,4 +21,9 @@ public class PlaceObjectCommand : ICommand
     {
         ObjectPlacer.RemoveObject(position);
     }
+
+    public override string ToString()
+    {
+        return "PlaceCube\t" + position.x + ":" + position.y + ":" + position.z;
+    }
 }
