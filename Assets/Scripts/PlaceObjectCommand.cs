@@ -19,6 +19,6 @@ public class PlaceObjectCommand : ICommand
 
     public void Undo()
     {
-        throw new System.NotImplementedException();
+        ObjectPlacer.RemoveObject(position);
     }
 }
