@@ -10,6 +10,7 @@ public class AssetBrushComponentInspector : Editor
     private bool placingMode = false;
     private RaycastHit mouseHit;
     private AssetBrushComponent assetBrush;
+    private bool useCommandWorkflow;
 
  //   private string objectSetName;
  //   private bool invalidSetName;
@@ -23,6 +24,7 @@ public class AssetBrushComponentInspector : Editor
     {
         DrawDefaultInspector();
         assetBrush = (AssetBrushComponent)target;
+        useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
 
         ///UI Borrador para crear sets
         //EditorGUILayout.Space();
@@ -64,6 +66,8 @@ public class AssetBrushComponentInspector : Editor
                     Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
                     if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f, assetBrush.placementSurface))
                     {
+                        //Add specific object functionality
+                        //ObjectPlacer.PlaceObject(mouseHit.point);
                         PlaceObject(mouseHit.point);
                     }
                 }
@@ -74,11 +78,17 @@ public class AssetBrushComponentInspector : Editor
         }
     }
 
-    void PlaceObject(Vector3 placementPosition)
+    void PlaceObject(Vector3 position)
     {
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube); //PLACEHOLDER TEST
-        Undo.RecordObject(go, "Placed Object via AssetBrush");
-        PrefabUtility.RecordPrefabInstancePropertyModifications(go);
-        go.transform.position = placementPosition;
+        if (useCommandWorkflow)
+        {
+            ICommand newCommand = new PlaceObjectCommand(position);
+            CommandInvoker.AddCommand(newCommand);
+        }
+        else
+        {
+            ObjectPlacer.PlaceObject(position);
+        }
     }
+
 }
