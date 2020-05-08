@@ -67,7 +67,6 @@ public class AssetBrushComponentInspector : Editor
                     if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f, assetBrush.placementSurface))
                     {
                         //Add specific object functionality
-                        //ObjectPlacer.PlaceObject(mouseHit.point);
                         PlaceObject(mouseHit.point);
                     }
                 }
