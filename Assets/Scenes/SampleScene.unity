@@ -149,6 +149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06a9318c8442f44f91e7f6f710aa2e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  placementSurface:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!4 &19788223
 Transform:
   m_ObjectHideFlags: 0
@@ -267,7 +270,7 @@ GameObject:
   - component: {fileID: 713470668}
   - component: {fileID: 713470667}
   - component: {fileID: 713470666}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -286,6 +289,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06a9318c8442f44f91e7f6f710aa2e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  placementSurface:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!64 &713470667
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AssetBrushPrototype : MonoBehaviour
+public interface ICommand
 {
-
+    void Execute();
+    void Undo();
 }
