@@ -7,9 +7,9 @@ public static class ObjectPlacer //CONCRETE COMMAND
 {
     static List<Transform> spawnedObjects;
 
-    public static void PlaceObject(Vector3 placementPosition)
+    public static void PlaceObject(Vector3 placementPosition, GameObject objectToPlace)
     {
-        GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube); //PLACEHOLDER TEST
+        GameObject go = GameObject.Instantiate(objectToPlace); //PLACEHOLDER TEST
 
         Undo.RecordObject(go, "Placed Object via AssetBrush"); //UNDO FUNCTIONALITY. ESTO NO ANDA AUN
         PrefabUtility.RecordPrefabInstancePropertyModifications(go);

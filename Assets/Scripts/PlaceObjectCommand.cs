@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlaceObjectCommand : ICommand
 {
     Vector3 position;
-    GameObject _object;// TO BE IMPLEMENTED
+    GameObject _gameObject;// TO BE IMPLEMENTED
 
     public PlaceObjectCommand(Vector3 position)
     {
@@ -14,7 +14,7 @@ public class PlaceObjectCommand : ICommand
 
     public void Execute()
     {
-        ObjectPlacer.PlaceObject(position);
+        ObjectPlacer.PlaceObject(position, _gameObject);
     }
 
     public void Undo()

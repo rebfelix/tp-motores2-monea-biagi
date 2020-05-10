@@ -6,7 +6,7 @@ using UnityEditor;
 [CustomEditor(typeof(AssetBrushComponent))]
 public class AssetBrushComponentInspector : Editor
 {
-    public GameObject objectToPlace;
+    public GameObject objectSelected; // Objeto a poner
     private bool placingMode = false;
     private RaycastHit mouseHit;
     private AssetBrushComponent assetBrush;
@@ -24,7 +24,22 @@ public class AssetBrushComponentInspector : Editor
     {
         DrawDefaultInspector();
         assetBrush = (AssetBrushComponent)target;
-        useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
+        //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
+
+        //SELECTOR DE PREFAB
+        GameObject preSelectedObject = EditorGUILayout.ObjectField( //preselecciono un objeto y le hago unos chequeos antes de asignarlo
+            "Object To Spawn", //Etiqueta
+            objectSelected, //objeto
+            typeof(GameObject), //tipo
+            false) as GameObject; //Ofrecer objetos en escena? No
+        if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
+        {
+            objectSelected = preSelectedObject; //Lo asigno
+        }
+        else
+        {
+            objectSelected = null; //Si no, dejo el campo en null
+        }
 
         ///UI Borrador para crear sets
         //EditorGUILayout.Space();
@@ -86,7 +101,7 @@ public class AssetBrushComponentInspector : Editor
         }
         else
         {
-            ObjectPlacer.PlaceObject(position); //METODO COMUN PARA COLOCAR OBJETOS USADO POR DEFECTO
+            ObjectPlacer.PlaceObject(position, objectSelected); //METODO COMUN PARA COLOCAR OBJETOS USADO POR DEFECTO
         }
     }
 
