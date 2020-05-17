@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(AssetBrushComponent))]
-public class AssetBrushComponentInspector : Editor
+public class AssetBrushWindow : EditorWindow
 {
     public GameObject objectSelected; // Objeto a poner
     private bool placingMode = false;
@@ -12,19 +11,23 @@ public class AssetBrushComponentInspector : Editor
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
 
- //   private string objectSetName;
- //   private bool invalidSetName;
+    //   private string objectSetName;
+    //   private bool invalidSetName;
+
+    [MenuItem("AssetBrush/AssetBrush Window")]
+    public static void ShowWindow()
+    {
+        EditorWindow.GetWindow(typeof(AssetBrushWindow));
+    }
 
     private void OnEnable()
     {
-        assetBrush = (AssetBrushComponent)target;
+        
     }
 
-    public override void OnInspectorGUI()
+    void OnGUI()
     {
-        DrawDefaultInspector();
-        assetBrush = (AssetBrushComponent)target;
-        useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
+        //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
 
         //SELECTOR DE PREFAB
         GameObject preSelectedObject = EditorGUILayout.ObjectField( //preselecciono un objeto y le hago unos chequeos antes de asignarlo
@@ -66,6 +69,8 @@ public class AssetBrushComponentInspector : Editor
                 placingMode = false;
             }
         }
+
+        //assetBrush = 
     }
 
     void OnSceneGUI()
