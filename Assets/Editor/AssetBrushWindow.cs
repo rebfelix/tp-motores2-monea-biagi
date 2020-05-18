@@ -22,7 +22,12 @@ public class AssetBrushWindow : EditorWindow
 
     private void OnEnable()
     {
-        
+        SceneView.duringSceneGui += this.OnSceneGUI;
+    }
+
+    private void OnDisable()
+    {
+        SceneView.duringSceneGui -= this.OnSceneGUI;
     }
 
     void OnGUI()
@@ -70,13 +75,20 @@ public class AssetBrushWindow : EditorWindow
             }
         }
 
-        //assetBrush = 
+
     }
 
-    void OnSceneGUI()
+    void OnSceneGUI(SceneView sceneView)
     {
+        if (SceneView.lastActiveSceneView == null)
+        {
+            Debug.Log("sceneview last null");
+            return;
+        }
+            Debug.Log("OnSceneGUI");
         if (placingMode) //Creo un handleUtility para detectar el input del mouse
         {
+            Debug.Log("is in placing mode#");
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             HandleUtility.AddDefaultControl(controlID);
             if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
@@ -84,7 +96,7 @@ public class AssetBrushWindow : EditorWindow
                 if (Event.current.button == 0)
                 {
                     Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f, assetBrush.placementSurface))
+                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface
                     {
                         //Add specific object functionality
                         PlaceObject(mouseHit.point);
@@ -92,13 +104,15 @@ public class AssetBrushWindow : EditorWindow
                 }
                 Event.current.Use();
                 placingMode = true;
-                Selection.activeGameObject = assetBrush.gameObject;
+                //Selection.activeGameObject = assetBrush.gameObject;
+                SceneView.lastActiveSceneView.Repaint();
             }
         }
     }
 
     void PlaceObject(Vector3 position)
     {
+        Debug.Log("place object called on position " + position);
         if (useCommandWorkflow)
         {
             ICommand newCommand = new PlaceObjectCommand(position); //METODO EXPERIMENTAL, NO SE USA POR DEFECTO

@@ -42,7 +42,7 @@ public class AssetBrushComponentInspector : Editor
             objectSelected, //objeto
             typeof(GameObject), //tipo
             false) as GameObject; //Ofrecer objetos en escena? No
-        if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
+        if (preSelectedObject != null && PrefabUtility.GetPrefabAssetType(preSelectedObject) != PrefabAssetType.NotAPrefab) //Si es un prefab..
         {
             objectSelected = preSelectedObject; //Lo asigno
             if(A.Contains(objectSelected) == false)
