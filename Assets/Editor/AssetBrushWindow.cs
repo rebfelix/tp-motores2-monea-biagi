@@ -11,6 +11,9 @@ public class AssetBrushWindow : EditorWindow
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
 
+    //Scrollview
+    Vector2 scrollPos;
+    string t = "This is a string inside a Scroll view!";
     //   private string objectSetName;
     //   private bool invalidSetName;
 
@@ -66,6 +69,19 @@ public class AssetBrushWindow : EditorWindow
             }
         }
 
+        //SCROLL VIEW
+
+        //EditorGUILayout.BeginHorizontal();
+        //scrollPos =
+        //    EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(100), GUILayout.Height(100));
+        //GUILayout.Label(t);
+        //EditorGUILayout.EndScrollView();
+        //if (GUILayout.Button("Add More Text", GUILayout.Width(100), GUILayout.Height(100)))
+        //    t += " \nAnd this is more text!";
+        //EditorGUILayout.EndHorizontal();
+        //if (GUILayout.Button("Clear"))
+        //    t = "";
+
 
     }
 
@@ -87,7 +103,7 @@ public class AssetBrushWindow : EditorWindow
                 if (Event.current.button == 0)
                 {
                     Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface
+                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
                     {
                         //Add specific object functionality
                         PlaceObject(mouseHit.point);
