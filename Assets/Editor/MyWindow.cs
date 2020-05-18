@@ -25,7 +25,29 @@ public class MyWindow : EditorWindow
     }
     private void Update()
     {
-        OnSceneGUI();
+        if (placingMode) //Creo un handleUtility para detectar el input del mouse
+        {
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
+            HandleUtility.AddDefaultControl(controlID);
+            if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
+            {
+                if (Event.current.button == 0)
+                {
+                    Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f, assetBrush.placementSurface))
+                    {
+                        //Add specific object functionality
+                        PlaceObject(mouseHit.point);
+                        Instantiate(objectSelected);
+
+                    }
+                }
+                Event.current.Use();
+                placingMode = true;
+                Selection.activeGameObject = assetBrush.gameObject;
+            }
+        }
+        //OnSceneGUI();
     }
     private void OnEnable()
     {
@@ -101,28 +123,7 @@ public class MyWindow : EditorWindow
 
     void OnSceneGUI()
     {
-        if (placingMode) //Creo un handleUtility para detectar el input del mouse
-        {
-            int controlID = GUIUtility.GetControlID(FocusType.Passive);
-            HandleUtility.AddDefaultControl(controlID);
-            if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
-            {
-                if (Event.current.button == 0)
-                {
-                    Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f, assetBrush.placementSurface))
-                    {
-                        //Add specific object functionality
-                        PlaceObject(mouseHit.point);
-                        Instantiate(objectSelected);
-
-                    }
-                }
-                Event.current.Use();
-                placingMode = true;
-                Selection.activeGameObject = assetBrush.gameObject;
-            }
-        }
+        
     }
     void search()
     {

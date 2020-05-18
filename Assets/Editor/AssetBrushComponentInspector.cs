@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 [CustomEditor(typeof(AssetBrushComponent))]
 public class AssetBrushComponentInspector : Editor
@@ -11,9 +12,10 @@ public class AssetBrushComponentInspector : Editor
     private RaycastHit mouseHit;
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
-
- //   private string objectSetName;
- //   private bool invalidSetName;
+    public List<GameObject> A = new List<GameObject>() { };
+    public int selection = -1;
+    //   private string objectSetName;
+    //   private bool invalidSetName;
 
     private void OnEnable()
     {
@@ -22,6 +24,14 @@ public class AssetBrushComponentInspector : Editor
 
     public override void OnInspectorGUI()
     {
+        
+        A = assetBrush.objetos;
+        selection = assetBrush.IndiseObjeto;
+        if (selection > -1 && A.Count > selection)
+        {
+            objectSelected = A[selection];
+
+        }
         DrawDefaultInspector();
         assetBrush = (AssetBrushComponent)target;
         useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
@@ -35,6 +45,11 @@ public class AssetBrushComponentInspector : Editor
         if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
         {
             objectSelected = preSelectedObject; //Lo asigno
+            if(A.Contains(objectSelected) == false)
+            {
+                A.Add(objectSelected);
+            }
+            Debug.Log(objectSelected);
         }
         else
         {
@@ -70,7 +85,7 @@ public class AssetBrushComponentInspector : Editor
 
     void OnSceneGUI()
     {
-        if (placingMode) //Creo un handleUtility para detectar el input del mouse
+        if (placingMode && objectSelected != null) //Creo un handleUtility para detectar el input del mouse
         {
             int controlID = GUIUtility.GetControlID(FocusType.Passive);
             HandleUtility.AddDefaultControl(controlID);

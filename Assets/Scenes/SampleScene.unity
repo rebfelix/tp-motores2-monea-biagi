@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06a9318c8442f44f91e7f6f710aa2e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IndiseObjeto: -1
+  objetos: []
   placementSurface:
     serializedVersion: 2
     m_Bits: 256
@@ -289,6 +291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06a9318c8442f44f91e7f6f710aa2e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IndiseObjeto: 0
+  objetos: []
   placementSurface:
     serializedVersion: 2
     m_Bits: 0
