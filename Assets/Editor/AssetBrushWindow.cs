@@ -22,7 +22,7 @@ public class AssetBrushWindow : EditorWindow
 
     private void OnEnable()
     {
-        SceneView.duringSceneGui += this.OnSceneGUI;
+        SceneView.duringSceneGui += this.OnSceneGUI; //Hay que suscribirse aca para que la Scene View me avise cuando sucede algo en ella
     }
 
     private void OnDisable()
@@ -49,15 +49,6 @@ public class AssetBrushWindow : EditorWindow
             objectSelected = null; //Si no, dejo el campo en null
         }
 
-        ///UI Borrador para crear sets
-        //EditorGUILayout.Space();
-        //EditorGUILayout.BeginHorizontal();
-        ////draw path text label
-        //GUILayout.Label("New Set Name: ", GUILayout.Height(20));
-        //objectSetName = EditorGUILayout.TextField(objectSetName, GUILayout.Height(20));
-        //EditorGUILayout.EndHorizontal();
-        //EditorGUILayout.Space();
-
         if (!placingMode) //NOT IN PLACING MODE: MUESTRO EL BOTON
         {
             if (GUILayout.Button("Click to start placing objects"))
@@ -82,7 +73,7 @@ public class AssetBrushWindow : EditorWindow
     {
         if (SceneView.lastActiveSceneView == null)
         {
-            Debug.Log("sceneview last null");
+            Debug.Log("warning! last active sceneview is null");
             return;
         }
             Debug.Log("OnSceneGUI");
