@@ -11,6 +11,10 @@ public class AssetBrushWindow : EditorWindow
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
 
+    public bool click = false;
+    public float dist;
+    public Vector3 _last;
+    public Vector3 _position;
     //Scrollview
     Vector2 scrollPos;
     string t = "This is a string inside a Scroll view!";
@@ -87,39 +91,69 @@ public class AssetBrushWindow : EditorWindow
 
     void OnSceneGUI(SceneView sceneView)
     {
+        Ray pos = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+
+        _position = pos.direction;
+
+            dist = Vector3.Distance(_last, _position);
+            Debug.Log(pos.direction + pos.origin);
+        
+        
         if (SceneView.lastActiveSceneView == null)
         {
-            Debug.Log("warning! last active sceneview is null");
+           // Debug.Log("warning! last active sceneview is null");
             return;
         }
-            Debug.Log("OnSceneGUI");
-        if (placingMode) //Creo un handleUtility para detectar el input del mouse
-        {
-            Debug.Log("is in placing mode#");
-            int controlID = GUIUtility.GetControlID(FocusType.Passive);
-            HandleUtility.AddDefaultControl(controlID);
-            if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
+           // Debug.Log("OnSceneGUI");
+        
+            if (placingMode) //Creo un handleUtility para detectar el input del mouse
             {
-                if (Event.current.button == 0)
+                //Debug.Log("is in placing mode#");
+                int controlID = GUIUtility.GetControlID(FocusType.Passive);
+                HandleUtility.AddDefaultControl(controlID);
+                if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
+                {
+                for(int i = 0; i < 2; i++)
+                {
+                    
+                }
+                if (_last != null)
+                {
+                    if (Event.current.button == 0 && dist > 1)
+                    {
+                        Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+                        if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
+                        {
+                            //Add specific object functionality
+                            PlaceObject(mouseHit.point);
+
+                        }
+                    }
+                }else if(Event.current.button == 0)
                 {
                     Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
                     if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
                     {
                         //Add specific object functionality
                         PlaceObject(mouseHit.point);
+
                     }
                 }
+
                 Event.current.Use();
-                placingMode = true;
-                //Selection.activeGameObject = assetBrush.gameObject;
-                SceneView.lastActiveSceneView.Repaint();
+                    placingMode = true;
+                    //Selection.activeGameObject = assetBrush.gameObject;
+                    SceneView.lastActiveSceneView.Repaint();
+             
             }
+
         }
     }
 
     void PlaceObject(Vector3 position)
     {
-        Debug.Log("place object called on position " + position);
+        //Debug.Log("place object called on position " + position);
+        _last = position;
         if (useCommandWorkflow)
         {
             ICommand newCommand = new PlaceObjectCommand(position); //METODO EXPERIMENTAL, NO SE USA POR DEFECTO
