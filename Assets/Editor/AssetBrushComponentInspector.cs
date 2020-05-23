@@ -30,7 +30,6 @@ public class AssetBrushComponentInspector : Editor
         if (selection > -1 && A.Count > selection)
         {
             objectSelected = A[selection];
-
         }
         DrawDefaultInspector();
         assetBrush = (AssetBrushComponent)target;

@@ -10,6 +10,7 @@ public class AssetBrushWindow : EditorWindow
     private RaycastHit mouseHit;
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
+    private RaycastHit HitPos;
 
     public bool click = false;
     public float dist;
@@ -25,6 +26,8 @@ public class AssetBrushWindow : EditorWindow
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(AssetBrushWindow));
+        
+
     }
 
     private void OnEnable()
@@ -39,6 +42,8 @@ public class AssetBrushWindow : EditorWindow
 
     void OnGUI()
     {
+        
+
         //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
 
         //SELECTOR DE PREFAB
@@ -47,14 +52,8 @@ public class AssetBrushWindow : EditorWindow
             objectSelected, //objeto
             typeof(GameObject), //tipo
             false) as GameObject; //Ofrecer objetos en escena? No
-        if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
-        {
-            objectSelected = preSelectedObject; //Lo asigno
-        }
-        else
-        {
-            objectSelected = null; //Si no, dejo el campo en null
-        }
+
+       
 
         if (!placingMode) //NOT IN PLACING MODE: MUESTRO EL BOTON
         {
@@ -91,12 +90,18 @@ public class AssetBrushWindow : EditorWindow
 
     void OnSceneGUI(SceneView sceneView)
     {
-        Ray pos = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+        Ray RayPos = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+       
+       
 
-        _position = pos.direction;
+        if (Physics.Raycast(RayPos.origin, RayPos.direction, out HitPos, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
+        {
+            //Add specific object functionality
+            _position = (HitPos.point);
 
-            dist = Vector3.Distance(_last, _position);
-            Debug.Log(pos.direction + pos.origin);
+        }
+        dist = Vector3.Distance(_last, _position);
+            Debug.Log(dist);
         
         
         if (SceneView.lastActiveSceneView == null)
