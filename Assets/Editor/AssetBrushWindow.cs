@@ -11,7 +11,7 @@ public class AssetBrushWindow : EditorWindow
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
     private RaycastHit HitPos;
-
+    private float distancia;
     public bool click = false;
     public float dist;
     public Vector3 _last;
@@ -42,7 +42,7 @@ public class AssetBrushWindow : EditorWindow
 
     void OnGUI()
     {
-        
+        distancia = EditorGUILayout.FloatField(distancia);
 
         //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
 
@@ -52,8 +52,15 @@ public class AssetBrushWindow : EditorWindow
             objectSelected, //objeto
             typeof(GameObject), //tipo
             false) as GameObject; //Ofrecer objetos en escena? No
+        if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
+        {
+            objectSelected = preSelectedObject; //Lo asigno
+        }
+        else
+        {
+            objectSelected = null; //Si no, dejo el campo en null
+        }
 
-       
 
         if (!placingMode) //NOT IN PLACING MODE: MUESTRO EL BOTON
         {
@@ -124,7 +131,7 @@ public class AssetBrushWindow : EditorWindow
                 }
                 if (_last != null)
                 {
-                    if (Event.current.button == 0 && dist > 1)
+                    if (Event.current.button == 0 && dist > distancia)
                     {
                         Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
                         if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
