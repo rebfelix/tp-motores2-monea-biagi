@@ -16,6 +16,7 @@ public class AssetBrushWindow : EditorWindow
     public float dist;
     public Vector3 _last;
     public Vector3 _position;
+    public bool repeat = false;
     //Scrollview
     Vector2 scrollPos;
     string t = "This is a string inside a Scroll view!";
@@ -42,6 +43,7 @@ public class AssetBrushWindow : EditorWindow
 
     void OnGUI()
     {
+
         distancia = EditorGUILayout.FloatField(distancia);
 
         //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
@@ -92,7 +94,7 @@ public class AssetBrushWindow : EditorWindow
         //if (GUILayout.Button("Clear"))
         //    t = "";
 
-
+        
     }
 
     void OnSceneGUI(SceneView sceneView)
@@ -103,14 +105,23 @@ public class AssetBrushWindow : EditorWindow
 
         if (Physics.Raycast(RayPos.origin, RayPos.direction, out HitPos, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
         {
-            //Add specific object functionality
+                                                   //Add specific object functionality
             _position = (HitPos.point);
 
         }
         dist = Vector3.Distance(_last, _position);
-            Debug.Log(dist);
-        
-        
+            Debug.Log(repeat);
+        if (distancia < 0.9f) distancia = 0.9f;
+        if (repeat == true && placingMode == true && dist > distancia)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+            if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
+            {
+                //Add specific object functionality
+                PlaceObject(mouseHit.point);
+
+            }
+        }
         if (SceneView.lastActiveSceneView == null)
         {
            // Debug.Log("warning! last active sceneview is null");
@@ -125,32 +136,15 @@ public class AssetBrushWindow : EditorWindow
                 HandleUtility.AddDefaultControl(controlID);
                 if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
                 {
-                for(int i = 0; i < 2; i++)
-                {
-                    
-                }
+               
                 if (_last != null)
                 {
-                    if (Event.current.button == 0 && dist > distancia)
+                    if (Event.current.button == 0)
                     {
-                        Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-                        if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
-                        {
-                            //Add specific object functionality
-                            PlaceObject(mouseHit.point);
-
-                        }
+                        repeat = !repeat;
                     }
-                }else if(Event.current.button == 0)
-                {
-                    Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-                    if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
-                    {
-                        //Add specific object functionality
-                        PlaceObject(mouseHit.point);
-
-                    }
-                }
+                    
+                }else 
 
                 Event.current.Use();
                     placingMode = true;
@@ -161,7 +155,13 @@ public class AssetBrushWindow : EditorWindow
 
         }
     }
+    private void Update()
+    {
+        if(repeat == true)
+        {
 
+        }
+    }
     void PlaceObject(Vector3 position)
     {
         //Debug.Log("place object called on position " + position);
