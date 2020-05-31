@@ -12,8 +12,8 @@ public class AssetBrushComponentInspector : Editor
     private RaycastHit mouseHit;
     private AssetBrushComponent assetBrush;
     private bool useCommandWorkflow;
-    public List<GameObject> A = new List<GameObject>() { };
-    public int selection = -1;
+    public List<GameObject> prefabResientes = new List<GameObject>() { };
+    public string prefabSelected;
     //   private string objectSetName;
     //   private bool invalidSetName;
 
@@ -25,11 +25,18 @@ public class AssetBrushComponentInspector : Editor
     public override void OnInspectorGUI()
     {
         
-        A = assetBrush.objetos;
-        selection = assetBrush.IndiseObjeto;
-        if (selection > -1 && A.Count > selection)
+        prefabResientes = assetBrush.objetos;
+
+        for(int i = 0; i < prefabResientes.Count; i++)
         {
-            objectSelected = A[selection];
+            prefabSelected = prefabResientes[i].name;
+            GUILayout.BeginHorizontal();
+            if(GUILayout.Button("seleccionar  " + prefabSelected))
+            {
+                objectSelected = prefabResientes[i];
+            }
+           
+            GUILayout.EndHorizontal();
         }
         DrawDefaultInspector();
         assetBrush = (AssetBrushComponent)target;
@@ -44,9 +51,10 @@ public class AssetBrushComponentInspector : Editor
         if (preSelectedObject != null && PrefabUtility.GetPrefabAssetType(preSelectedObject) != PrefabAssetType.NotAPrefab) //Si es un prefab..
         {
             objectSelected = preSelectedObject; //Lo asigno
-            if(A.Contains(objectSelected) == false)
+            if(prefabResientes.Contains(objectSelected) == false)
             {
-                A.Add(objectSelected);
+                prefabResientes.Add(objectSelected);
+                
             }
             Debug.Log(objectSelected);
         }

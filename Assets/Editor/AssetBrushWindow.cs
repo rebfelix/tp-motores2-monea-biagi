@@ -17,6 +17,8 @@ public class AssetBrushWindow : EditorWindow
     public Vector3 _last;
     public Vector3 _position;
     public bool repeat = false;
+    public List<GameObject> prefabResientes = new List<GameObject>() { };
+    public string prefabSelected;
     //Scrollview
     Vector2 scrollPos;
     string t = "This is a string inside a Scroll view!";
@@ -44,6 +46,17 @@ public class AssetBrushWindow : EditorWindow
     void OnGUI()
     {
 
+        for (int i = 0; i < prefabResientes.Count; i++)
+        {
+            prefabSelected = prefabResientes[i].name;
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("seleccionar  " + prefabSelected))
+            {
+                objectSelected = prefabResientes[i];
+            }
+
+            GUILayout.EndHorizontal();
+        }
         distancia = EditorGUILayout.FloatField(distancia);
 
         //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
@@ -57,6 +70,11 @@ public class AssetBrushWindow : EditorWindow
         if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
         {
             objectSelected = preSelectedObject; //Lo asigno
+            if (prefabResientes.Contains(objectSelected) == false)
+            {
+                prefabResientes.Add(objectSelected);
+
+            }
         }
         else
         {
@@ -68,7 +86,7 @@ public class AssetBrushWindow : EditorWindow
         {
             if (GUILayout.Button("Click to start placing objects"))
             {
-                Debug.Log("Entering interactive mode");
+               // Debug.Log("Entering interactive mode");
                 placingMode = true;
             }
         }
@@ -110,16 +128,17 @@ public class AssetBrushWindow : EditorWindow
 
         }
         dist = Vector3.Distance(_last, _position);
-            Debug.Log(repeat);
-        if (distancia < 0.9f) distancia = 0.9f;
+           // Debug.Log(repeat);
+        if (distancia < 1.5f) distancia = 1.5f;
         if (repeat == true && placingMode == true && dist > distancia)
         {
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
             if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
             {
                 //Add specific object functionality
-                PlaceObject(mouseHit.point);
-
+                
+                    PlaceObject(mouseHit.point);
+               
             }
         }
         if (SceneView.lastActiveSceneView == null)
@@ -131,37 +150,32 @@ public class AssetBrushWindow : EditorWindow
         
             if (placingMode) //Creo un handleUtility para detectar el input del mouse
             {
-                //Debug.Log("is in placing mode#");
-                int controlID = GUIUtility.GetControlID(FocusType.Passive);
+            repeat = false;
+            //Debug.Log("is in placing mode#");
+            int controlID = GUIUtility.GetControlID(FocusType.Passive);
                 HandleUtility.AddDefaultControl(controlID);
-                if (Event.current.type == EventType.MouseDown && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
+                if (Event.current.type == EventType.MouseDrag && !Event.current.alt && placingMode) //Chequeo que no este apretando Alt, para permitirle rotar la camara
                 {
-               
-                if (_last != null)
-                {
+                if (objectSelected != null)
+                { 
                     if (Event.current.button == 0)
                     {
-                        repeat = !repeat;
+                        repeat = true;
                     }
-                    
-                }else 
+                }
+                else 
 
                 Event.current.Use();
                     placingMode = true;
                     //Selection.activeGameObject = assetBrush.gameObject;
                     SceneView.lastActiveSceneView.Repaint();
              
+                
             }
 
         }
     }
-    private void Update()
-    {
-        if(repeat == true)
-        {
 
-        }
-    }
     void PlaceObject(Vector3 position)
     {
         //Debug.Log("place object called on position " + position);
