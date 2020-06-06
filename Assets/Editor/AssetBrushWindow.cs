@@ -9,6 +9,7 @@ public class AssetBrushWindow : EditorWindow
     private bool placingMode = false;
     private RaycastHit mouseHit;
     private AssetBrushComponent assetBrush;
+    public Vector3 spawnRandom;
     private bool useCommandWorkflow;
     private RaycastHit HitPos;
     private float distancia;
@@ -19,6 +20,8 @@ public class AssetBrushWindow : EditorWindow
     public bool repeat = false;
     public List<GameObject> prefabResientes = new List<GameObject>() { };
     public string prefabSelected;
+    
+    public float random;
     //Scrollview
     Vector2 scrollPos;
     string t = "This is a string inside a Scroll view!";
@@ -57,8 +60,10 @@ public class AssetBrushWindow : EditorWindow
 
             GUILayout.EndHorizontal();
         }
+        EditorGUILayout.LabelField("Espacio entre objetos");
         distancia = EditorGUILayout.FloatField(distancia);
-
+        EditorGUILayout.LabelField("Rendomizar Posicion");
+        random = EditorGUILayout.FloatField(random);
         //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
 
         //SELECTOR DE PREFAB
@@ -129,15 +134,16 @@ public class AssetBrushWindow : EditorWindow
         }
         dist = Vector3.Distance(_last, _position);
            // Debug.Log(repeat);
-        if (distancia < 1.5f) distancia = 1.5f;
+       
         if (repeat == true && placingMode == true && dist > distancia)
         {
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
             if (Physics.Raycast(ray.origin, ray.direction, out mouseHit, 1000f)) //assetBrush.placementSurface ARREGLAR LAYERMASK
             {
                 //Add specific object functionality
-                
-                    PlaceObject(mouseHit.point);
+
+                spawnRandom = new Vector3(Random.Range(-random, random), Random.Range(0, 0), Random.Range(-random, random)) + mouseHit.point;
+                    PlaceObject(spawnRandom);
                
             }
         }
