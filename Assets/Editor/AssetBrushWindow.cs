@@ -46,12 +46,7 @@ public class AssetBrushWindow : EditorWindow
     }
 
     void OnGUI()
-    {
-
-
-
-            GUILayout.EndHorizontal();
-        
+    {        
         EditorGUILayout.LabelField("Espacio entre objetos");
 
         distancia = EditorGUILayout.FloatField(distancia);
