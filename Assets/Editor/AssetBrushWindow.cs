@@ -13,15 +13,18 @@ public class AssetBrushWindow : EditorWindow
     private bool useCommandWorkflow;
     private RaycastHit HitPos;
     private float distancia;
+    private float conparar;
     public bool click = false;
     public float dist;
     public Vector3 _last;
     public Vector3 _position;
     public bool repeat = false;
     public List<GameObject> prefabsRecientes = new List<GameObject>() { };
+    public List<float> prefabsSeparacion = new List<float>() { };
     public string prefabSelected;
-    
+    public float prefabSelectedDistancia;
     public float random;
+    private int distanciPosicionLista;
     //Scrollview
     Vector2 scrollPos;
     //   private string objectSetName;
@@ -32,7 +35,7 @@ public class AssetBrushWindow : EditorWindow
     {
         EditorWindow.GetWindow(typeof(AssetBrushWindow));
         
-
+        
     }
 
     private void OnEnable()
@@ -47,9 +50,19 @@ public class AssetBrushWindow : EditorWindow
 
     void OnGUI()
     {        
+        
         EditorGUILayout.LabelField("Espacio entre objetos");
-
+        conparar = distancia;
         distancia = EditorGUILayout.FloatField(distancia);
+        if(conparar != distancia)
+        {
+            if(prefabsRecientes.Count > 0)
+            {
+                prefabsSeparacion.RemoveAt(distanciPosicionLista);
+                prefabsSeparacion.Insert(distanciPosicionLista, distancia);
+            }
+            conparar = distancia;
+        }
         EditorGUILayout.LabelField("Rendomizar Posicion");
         random = EditorGUILayout.FloatField(random);
         //useCommandWorkflow = EditorGUILayout.Toggle("Use Command Workflow (experimental)", useCommandWorkflow);
@@ -66,7 +79,8 @@ public class AssetBrushWindow : EditorWindow
             if (prefabsRecientes.Contains(objectSelected) == false)
             {
                 prefabsRecientes.Add(objectSelected);
-
+                prefabsSeparacion.Add(distancia);
+                distanciPosicionLista = prefabsRecientes.Count - 1;
             }
         }
         else
@@ -96,16 +110,18 @@ public class AssetBrushWindow : EditorWindow
         //SCROLL VIEW
 
         EditorGUILayout.BeginHorizontal();
-        scrollPos =
-            EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(400), GUILayout.Height(100));
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(400), GUILayout.Height(100));
         GUILayout.Label("Recent Objects");
         for (int i = 0; i < prefabsRecientes.Count; i++)
         {
             prefabSelected = prefabsRecientes[i].name;
+            prefabSelectedDistancia = prefabsSeparacion[i];
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("seleccionar  " + prefabSelected))
             {
                 objectSelected = prefabsRecientes[i];
+                distanciPosicionLista = i;
+                distancia = prefabSelectedDistancia;
                 placingMode = true;
             }
 
@@ -114,7 +130,11 @@ public class AssetBrushWindow : EditorWindow
         EditorGUILayout.EndScrollView();
         EditorGUILayout.EndHorizontal();
         if (GUILayout.Button("Clear"))
+        {
             prefabsRecientes.Clear();
+            prefabsSeparacion.Clear();
+        }
+            
 
 
     }
