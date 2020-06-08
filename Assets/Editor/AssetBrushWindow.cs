@@ -18,13 +18,12 @@ public class AssetBrushWindow : EditorWindow
     public Vector3 _last;
     public Vector3 _position;
     public bool repeat = false;
-    public List<GameObject> prefabResientes = new List<GameObject>() { };
+    public List<GameObject> prefabsRecientes = new List<GameObject>() { };
     public string prefabSelected;
     
     public float random;
     //Scrollview
     Vector2 scrollPos;
-    string t = "This is a string inside a Scroll view!";
     //   private string objectSetName;
     //   private bool invalidSetName;
 
@@ -49,18 +48,12 @@ public class AssetBrushWindow : EditorWindow
     void OnGUI()
     {
 
-        for (int i = 0; i < prefabResientes.Count; i++)
-        {
-            prefabSelected = prefabResientes[i].name;
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("seleccionar  " + prefabSelected))
-            {
-                objectSelected = prefabResientes[i];
-            }
+
 
             GUILayout.EndHorizontal();
-        }
+        
         EditorGUILayout.LabelField("Espacio entre objetos");
+
         distancia = EditorGUILayout.FloatField(distancia);
         EditorGUILayout.LabelField("Rendomizar Posicion");
         random = EditorGUILayout.FloatField(random);
@@ -75,9 +68,9 @@ public class AssetBrushWindow : EditorWindow
         if (preSelectedObject != null && PrefabUtility.GetPrefabType(preSelectedObject) == PrefabType.Prefab) //Si es un prefab..
         {
             objectSelected = preSelectedObject; //Lo asigno
-            if (prefabResientes.Contains(objectSelected) == false)
+            if (prefabsRecientes.Contains(objectSelected) == false)
             {
-                prefabResientes.Add(objectSelected);
+                prefabsRecientes.Add(objectSelected);
 
             }
         }
@@ -102,22 +95,33 @@ public class AssetBrushWindow : EditorWindow
             {
                 placingMode = false;
             }
+            GUI.backgroundColor = Color.grey;
         }
 
         //SCROLL VIEW
 
-        //EditorGUILayout.BeginHorizontal();
-        //scrollPos =
-        //    EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(100), GUILayout.Height(100));
-        //GUILayout.Label(t);
-        //EditorGUILayout.EndScrollView();
-        //if (GUILayout.Button("Add More Text", GUILayout.Width(100), GUILayout.Height(100)))
-        //    t += " \nAnd this is more text!";
-        //EditorGUILayout.EndHorizontal();
-        //if (GUILayout.Button("Clear"))
-        //    t = "";
+        EditorGUILayout.BeginHorizontal();
+        scrollPos =
+            EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(400), GUILayout.Height(100));
+        GUILayout.Label("Recent Objects");
+        for (int i = 0; i < prefabsRecientes.Count; i++)
+        {
+            prefabSelected = prefabsRecientes[i].name;
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("seleccionar  " + prefabSelected))
+            {
+                objectSelected = prefabsRecientes[i];
+                placingMode = true;
+            }
 
-        
+            GUILayout.EndHorizontal();
+        }
+        EditorGUILayout.EndScrollView();
+        EditorGUILayout.EndHorizontal();
+        if (GUILayout.Button("Clear"))
+            prefabsRecientes.Clear();
+
+
     }
 
     void OnSceneGUI(SceneView sceneView)
