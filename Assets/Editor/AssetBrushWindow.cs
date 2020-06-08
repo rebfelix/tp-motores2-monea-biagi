@@ -5,6 +5,8 @@ using UnityEditor;
 
 public class AssetBrushWindow : EditorWindow
 {
+    public Texture2D previewBackgroundTexture;
+    private Editor gameObjectEditor;
     public GameObject objectSelected; // Objeto a poner
     private bool placingMode = false;
     private RaycastHit mouseHit;
@@ -31,8 +33,6 @@ public class AssetBrushWindow : EditorWindow
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(AssetBrushWindow));
-        
-
     }
 
     private void OnEnable()
@@ -46,7 +46,12 @@ public class AssetBrushWindow : EditorWindow
     }
 
     void OnGUI()
-    {        
+    {
+        //styles
+        GUIStyle bgColor = new GUIStyle();
+
+        bgColor.normal.background = previewBackgroundTexture;
+        //
         EditorGUILayout.LabelField("Espacio entre objetos");
 
         distancia = EditorGUILayout.FloatField(distancia);
@@ -92,12 +97,14 @@ public class AssetBrushWindow : EditorWindow
             }
             GUI.backgroundColor = Color.grey;
         }
+        if (GUILayout.Button("Clear Recent Prefabs"))
+            prefabsRecientes.Clear();
 
         //SCROLL VIEW
 
         EditorGUILayout.BeginHorizontal();
         scrollPos =
-            EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(400), GUILayout.Height(100));
+            EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(400), GUILayout.Height(200));
         GUILayout.Label("Recent Objects");
         for (int i = 0; i < prefabsRecientes.Count; i++)
         {
@@ -108,15 +115,15 @@ public class AssetBrushWindow : EditorWindow
                 objectSelected = prefabsRecientes[i];
                 placingMode = true;
             }
-
+            if (prefabsRecientes[i] != null)
+            {
+                gameObjectEditor = Editor.CreateEditor(prefabsRecientes[i]);
+                gameObjectEditor.OnInteractivePreviewGUI(GUILayoutUtility.GetRect(100, 100), EditorStyles.whiteLabel);
+            }
             GUILayout.EndHorizontal();
         }
         EditorGUILayout.EndScrollView();
         EditorGUILayout.EndHorizontal();
-        if (GUILayout.Button("Clear"))
-            prefabsRecientes.Clear();
-
-
     }
 
     void OnSceneGUI(SceneView sceneView)
