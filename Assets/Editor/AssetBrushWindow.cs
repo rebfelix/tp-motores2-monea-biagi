@@ -115,7 +115,7 @@ public class AssetBrushWindow : EditorWindow
         for (int i = 0; i < prefabsRecientes.Count; i++)
         {
             prefabSelected = prefabsRecientes[i].name;
-            prefabSelectedDistancia = prefabsSeparacion[i];
+            if (i<prefabsSeparacion.Count) prefabSelectedDistancia = prefabsSeparacion[i];
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("seleccionar  " + prefabSelected))
             {
